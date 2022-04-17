@@ -1,7 +1,14 @@
 # Spring Kafka Bootcamp
 
+  * [Overview](#overview)
+  * [Resources](#resources)
+  * [Discount & Bonus](#discount--bonus)
+  * [Source Code](#source-code)
+
 ## Overview
 This is resource page for [Java Spring & Apache Kafka Bootcamp course](https://www.udemy.com/course/apache-kafka-with-java-spring-boot-theory-hands-on-coding/?referralCode=5C42CAF98051BB9CBA0A)
+
+----
 
 ## Resources
 
@@ -13,10 +20,14 @@ This is resource page for [Java Spring & Apache Kafka Bootcamp course](https://w
   - [Schema Registry & REST Proxy](schema-registry-rest-proxy)
   - [KsqlDB](ksqldb)
   - [Wrap Up](wrap-up)
-  
+
+----  
+
 ## Discount & Bonus
 
   - [Discount Codes of Other Courses](discounts)
+
+----
 
 ## Source Code
 
