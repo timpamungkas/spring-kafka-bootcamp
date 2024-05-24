@@ -251,14 +251,20 @@ kafka-console-consumer.sh --bootstrap-server localhost:9092 --property print.key
 
 # Consumer - FlashSaleVoteOne Stream
 kafka-console-consumer.sh --bootstrap-server localhost:9092 --property print.key=true --topic t-commodity-flashsale-vote
-kafka-console-consumer.sh --bootstrap-server localhost:9092 --property print.key=true --topic t-commodity-flashsale-vote-user-item
+kafka-console-consumer.sh --bootstrap-server localhost:9092 --property print.key=true --topic t-commodity-flashsale-vote-one-user-item
 kafka-console-consumer.sh --bootstrap-server localhost:9092 --property print.key=true --property value.deserializer=org.apache.kafka.common.serialization.LongDeserializer --topic t-commodity-flashsale-vote-one-result
 
 
 # Consumer - FlashSaleVoteTwo Stream
 kafka-console-consumer.sh --bootstrap-server localhost:9092 --property print.key=true --topic t-commodity-flashsale-vote
-kafka-console-consumer.sh --bootstrap-server localhost:9092 --property print.key=true --topic t-commodity-flashsale-vote-user-item
+kafka-console-consumer.sh --bootstrap-server localhost:9092 --property print.key=true --topic t-commodity-flashsale-vote-two-user-item
 kafka-console-consumer.sh --bootstrap-server localhost:9092 --property print.key=true --property value.deserializer=org.apache.kafka.common.serialization.LongDeserializer --topic t-commodity-flashsale-vote-two-result
+
+
+# Consumer - FlashSaleVoteThree Stream
+kafka-console-consumer.sh --bootstrap-server localhost:9092 --property print.key=true --topic t-commodity-flashsale-vote
+kafka-console-consumer.sh --bootstrap-server localhost:9092 --property print.key=true --topic t-commodity-flashsale-vote-three-user-item
+kafka-console-consumer.sh --bootstrap-server localhost:9092 --property print.key=true --property value.deserializer=org.apache.kafka.common.serialization.LongDeserializer --topic t-commodity-flashsale-vote-three-result
 
 
 # Consumer - FeedbackRatingOne Stream
