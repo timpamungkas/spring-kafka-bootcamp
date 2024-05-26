@@ -106,6 +106,7 @@ kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --repl
 kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-commodity-inventory-four
 kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-commodity-inventory-five
 kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-commodity-inventory-six
+kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-commodity-inventory-seven
 
 kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-commodity-online-order
 kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-commodity-online-payment
@@ -115,8 +116,6 @@ kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --repl
 
 kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-commodity-web-vote-color
 kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-commodity-web-vote-layout
-kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-commodity-web-vote-one-username-color --config "cleanup.policy=compact" --config "delete.retention.ms=2000"  --config "segment.ms=2000" --config "min.cleanable.dirty.ratio=0.01" --config "min.compaction.lag.ms=2000"
-kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-commodity-web-vote-one-username-layout --config "cleanup.policy=compact" --config "delete.retention.ms=2000"  --config "segment.ms=2000" --config "min.cleanable.dirty.ratio=0.01" --config "min.compaction.lag.ms=2000"
 kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-commodity-web-vote-one-result
 kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-commodity-web-vote-two-username-color --config "cleanup.policy=compact" --config "delete.retention.ms=2000"  --config "segment.ms=2000" --config "min.cleanable.dirty.ratio=0.01" --config "min.compaction.lag.ms=2000"
 kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-commodity-web-vote-two-username-layout --config "cleanup.policy=compact" --config "delete.retention.ms=2000"  --config "segment.ms=2000" --config "min.cleanable.dirty.ratio=0.01" --config "min.compaction.lag.ms=2000"
@@ -292,11 +291,15 @@ kafka-console-consumer.sh --bootstrap-server localhost:9092 --property print.key
 
 
 # Consumer - InventoryFive Stream
-# No console consumer, using print
+# Using code terminal, not kafka-console-consumer
 
 
 # Consumer - InventorySix Stream
-# No console consumer, using print
+# Using code terminal, not kafka-console-consumer
+
+
+# Consumer - InventorySevenStream
+# Using code terminal, not kafka-console-consumer
 
 
 # Consumer - OnlineOrderPaymentOne Stream
@@ -323,10 +326,6 @@ kafka-console-consumer.sh --bootstrap-server localhost:9092 --property print.key
 
 #Consumer - WebVoteThree Stream
 kafka-console-consumer.sh --bootstrap-server localhost:9092 --property print.key=true --property print.timestamp=true --topic t-commodity-web-vote-three-result
-
-
-#Consumer - WebVoteFour Stream
-kafka-console-consumer.sh --bootstrap-server localhost:9092 --property print.key=true --property print.timestamp=true --topic t-commodity-web-vote-four-result
 
 
 #Consumer - PremiumOfferOne Stream
