@@ -342,7 +342,7 @@ kafka-console-consumer.sh --bootstrap-server localhost:9092 --property print.key
 
 
 #Consumer - SubscriptionOfferOne Stream
-# None
+kafka-console-consumer.sh --bootstrap-server localhost:9092 --property print.key=true --topic t-commodity-subscription-offer-one
 
 
 #Consumer - SubscriptionOfferTwo Stream

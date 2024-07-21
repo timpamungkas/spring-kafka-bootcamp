@@ -53,6 +53,12 @@ kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group cg-dashboard 
 kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group cg-dashboard --execute --reset-offsets --to-offset 10 --topic t-commodity:0
 
 
+# Handling Consumer Offset
+kafka-console-consumer.sh --from-beginning --bootstrap-server localhost:9092 --property print.key=false --property print.value=false --topic t-counter --timeout-ms 5000 | tail -n 10|grep "Processed a total of"
+kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group counter-group-fast --describe
+kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group counter-group-slow --describe
+
+
 # Rebalancing
 kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-rebalance
 kafka-topics.sh --bootstrap-server localhost:9092 --alter --topic t-rebalance --partitions 2
