@@ -1121,11 +1121,16 @@ RUN SCRIPT /data/scripts/commodity-sample.ksql;
 ```bash
 CREATE OR REPLACE STREAM `s-commodity-fraud-six`
 AS
-SELECT CONCAT( SUBSTRING(`orderLocation`, 1, 1), '***' ) as `key`,
+SELECT CONCAT( SUBSTRING(`orderLocation`, 1, 1), '***' ) as `rowkey`,
        (`price` * `quantity`) as `totalValue`
-  FROM `s-commodity-order-masked`
+  FROM `s-commodity-order`
  WHERE LCASE(`orderLocation`) LIKE 'c%'
 PARTITION BY CONCAT( SUBSTRING(`orderLocation`, 1, 1), '***' )
+EMIT CHANGES;
+
+
+SELECT * 
+  FROM `s-commodity-fraud-six`
 EMIT CHANGES;
 ```
 </details>
@@ -1792,7 +1797,7 @@ EMIT CHANGES;
 CREATE TABLE `tbl-commodity-customer-preference-shopping-cart`
 AS
 SELECT `customerId`, AS_MAP ( COLLECT_LIST(`itemName`), COLLECT_LIST(`latestCartDatetime`)) AS `cartItems`
-FROM `tbl-commodity-customer-cogroup-shopping-cart`
+  FROM `tbl-commodity-customer-cogroup-shopping-cart`
 GROUP BY `customerId`
 EMIT CHANGES;
   
@@ -1943,6 +1948,11 @@ SELECT *
   FROM `tbl-commodity-flashsale-vote-one-result`
 EMIT CHANGES;
 
+
+-- pull query
+SELECT *
+  FROM `tbl-commodity-flashsale-vote-one-result`;
+  
 ```
 </details>
 
@@ -1975,8 +1985,8 @@ CREATE TABLE `tbl-commodity-flashsale-vote-user-item-timestamp`
 AS 
 SELECT `customerId`, LATEST_BY_OFFSET(`itemName`) AS `itemName`
   FROM `s-commodity-flashsale-vote`
- WHERE rowtime >= '2022-04-11T06:30:00'
-       AND rowtime < '2022-04-11T07:29:59'
+ WHERE rowtime >= '2024-09-06T22:00:00'
+       AND rowtime < '2024-09-06T23:00:00'
 GROUP BY `customerId`;
 
 
@@ -2155,7 +2165,7 @@ DROP STREAM IF EXISTS `s-commodity-inventory-four`;
 CREATE STREAM `s-commodity-inventory-four`
 WITH (
   TIMESTAMP = '`transactionTime`',
-  TIMESTAMP_FORMAT = 'yyyy-MM-dd''T''HH:mm:ss'
+  TIMESTAMP_FORMAT = 'yyyy-MM-dd''T''HH:mm:ss.SSSZ'
 )
 AS
 SELECT `item`,
@@ -2173,7 +2183,7 @@ SELECT `item`,
        `quantity`,
        `type`,
        `transactionTime`,
-       FORMAT_TIMESTAMP( FROM_UNIXTIME(rowtime), 'yyyy-MM-dd''T''HH:mm:ss') AS `extractedTime`
+       FORMAT_TIMESTAMP( FROM_UNIXTIME(rowtime), 'yyyy-MM-dd''T''HH:mm:ss.SSSZ') AS `extractedTime`
 FROM `s-commodity-inventory-four`
 EMIT CHANGES;
 
@@ -2208,7 +2218,7 @@ DROP STREAM IF EXISTS `s-commodity-inventory-five-movement`;
 CREATE STREAM `s-commodity-inventory-five-movement`
 WITH (
   TIMESTAMP = '`transactionTime`',
-  TIMESTAMP_FORMAT = 'yyyy-MM-dd''T''HH:mm:ss'
+  TIMESTAMP_FORMAT = 'yyyy-MM-dd''T''HH:mm:ss.SSSZ'
 )
 AS
 SELECT `item`,
@@ -2225,8 +2235,8 @@ EMIT CHANGES;
 -- Tumbling window
 CREATE TABLE `tbl-commodity-inventory-total-five`
 AS
-SELECT FORMAT_TIMESTAMP( FROM_UNIXTIME(windowstart), 'yyyy-MM-dd''T''HH:mm:ss') AS `windowStartTime`,
-       FORMAT_TIMESTAMP( FROM_UNIXTIME(windowend), 'yyyy-MM-dd''T''HH:mm:ss') AS `windowEndTime`,
+SELECT FORMAT_TIMESTAMP( FROM_UNIXTIME(windowstart), 'yyyy-MM-dd''T''HH:mm:ss.SSSZ') AS `windowStartTime`,
+       FORMAT_TIMESTAMP( FROM_UNIXTIME(windowend), 'yyyy-MM-dd''T''HH:mm:ss.SSSZ') AS `windowEndTime`,
        `item`, SUM(`quantity`) `totalQuantity`
   FROM `s-commodity-inventory-five-movement`
 WINDOW TUMBLING (SIZE 1 HOUR)
@@ -2261,7 +2271,7 @@ DROP STREAM IF EXISTS `s-commodity-inventory-six-movement`;
 CREATE STREAM `s-commodity-inventory-six-movement`
 WITH (
   TIMESTAMP = '`transactionTime`',
-  TIMESTAMP_FORMAT = 'yyyy-MM-dd''T''HH:mm:ss'
+  TIMESTAMP_FORMAT = 'yyyy-MM-dd''T''HH:mm:ss.SSSZ'
 )
 AS
 SELECT `item`,
@@ -2275,14 +2285,67 @@ FROM `s-commodity-inventory`
 EMIT CHANGES;
 
 
--- Tumbling window
+-- Hopping window
 CREATE TABLE `tbl-commodity-inventory-total-six`
 AS
-SELECT FORMAT_TIMESTAMP( FROM_UNIXTIME(windowstart), 'yyyy-MM-dd''T''HH:mm:ss') AS `windowStartTime`,
-       FORMAT_TIMESTAMP( FROM_UNIXTIME(windowend), 'yyyy-MM-dd''T''HH:mm:ss') AS `windowEndTime`,
+SELECT FORMAT_TIMESTAMP( FROM_UNIXTIME(windowstart), 'yyyy-MM-dd''T''HH:mm:ss.SSSZ') AS `windowStartTime`,
+       FORMAT_TIMESTAMP( FROM_UNIXTIME(windowend), 'yyyy-MM-dd''T''HH:mm:ss.SSSZ') AS `windowEndTime`,
        `item`, SUM(`quantity`) `totalQuantity`
   FROM `s-commodity-inventory-six-movement`
 WINDOW HOPPING (SIZE 1 HOUR, ADVANCE BY 20 MINUTES)
+GROUP BY `item`
+EMIT CHANGES;
+
+```
+</details>
+
+{::options parse_block_html="false" /}
+
+
+----
+
+## Inventory - Sessioon Window
+
+{::options parse_block_html="true" /}
+
+[Back to top](/spring-kafka-bootcamp/ksqldb)
+<details>
+  <summary markdown="span">Click to expand! </summary>
+
+```bash
+
+-- drop stream if exists
+TERMINATE ALL;
+DROP TABLE IF EXISTS `tbl-commodity-inventory-total-seven`;
+DROP STREAM IF EXISTS `s-commodity-inventory-seven-movement`;
+
+
+-- Create stream with custom timestamp and quantity movement
+CREATE STREAM `s-commodity-inventory-seven-movement`
+WITH (
+  TIMESTAMP = '`transactionTime`',
+  TIMESTAMP_FORMAT = 'yyyy-MM-dd''T''HH:mm:ss.SSSZ'
+)
+AS
+SELECT `item`,
+       CASE
+         WHEN `type` = 'ADD' THEN `quantity`
+         WHEN `type` = 'REMOVE' THEN (-1 * `quantity`)
+         ELSE 0
+       END AS `quantity`,
+       `transactionTime`
+FROM `s-commodity-inventory`
+EMIT CHANGES;
+
+
+-- Session window
+CREATE TABLE `tbl-commodity-inventory-total-seven`
+AS
+SELECT FORMAT_TIMESTAMP( FROM_UNIXTIME(windowstart), 'yyyy-MM-dd''T''HH:mm:ss.SSSZ') AS `windowStartTime`,
+       FORMAT_TIMESTAMP( FROM_UNIXTIME(windowend), 'yyyy-MM-dd''T''HH:mm:ss.SSSZ') AS `windowEndTime`,
+       `item`, SUM(`quantity`) `totalQuantity`
+  FROM `s-commodity-inventory-seven-movement`
+WINDOW SESSION (30 MINUTES)
 GROUP BY `item`
 EMIT CHANGES;
 
@@ -2319,7 +2382,7 @@ CREATE STREAM `s-commodity-online-order` (
 )
 WITH (
   TIMESTAMP = '`orderDateTime`',
-  TIMESTAMP_FORMAT = 'yyyy-MM-dd''T''HH:mm:ss',
+  TIMESTAMP_FORMAT = 'yyyy-MM-dd''T''HH:mm:ss.SSSZ',
   KAFKA_TOPIC = 't-commodity-online-order',
   VALUE_FORMAT = 'JSON'
 );
@@ -2334,7 +2397,7 @@ CREATE STREAM `s-commodity-online-payment` (
 )
 WITH (
   TIMESTAMP = '`paymentDateTime`',
-  TIMESTAMP_FORMAT = 'yyyy-MM-dd''T''HH:mm:ss',
+  TIMESTAMP_FORMAT = 'yyyy-MM-dd''T''HH:mm:ss.SSSZ',
   KAFKA_TOPIC = 't-commodity-online-payment',
   VALUE_FORMAT = 'JSON'
 );
@@ -2344,10 +2407,10 @@ WITH (
 CREATE STREAM `s-commodity-join-order-payment-one`
 AS
 SELECT `s-commodity-online-order`.`onlineOrderNumber` AS `onlineOrderNumber`,
-       PARSE_TIMESTAMP(`s-commodity-online-order`.`orderDateTime`, 'yyyy-MM-dd''T''HH:mm:ss') AS `orderDateTime`,
+       PARSE_TIMESTAMP(`s-commodity-online-order`.`orderDateTime`, 'yyyy-MM-dd''T''HH:mm:ss.SSSZ') AS `orderDateTime`,
        `s-commodity-online-order`.`totalAmount` AS `totalAmount`,
        `s-commodity-online-order`.`username` AS `username`,
-       PARSE_TIMESTAMP(`s-commodity-online-payment`.`paymentDateTime`, 'yyyy-MM-dd''T''HH:mm:ss') AS `paymentDateTime`,
+       PARSE_TIMESTAMP(`s-commodity-online-payment`.`paymentDateTime`, 'yyyy-MM-dd''T''HH:mm:ss.SSSZ') AS `paymentDateTime`,
        `s-commodity-online-payment`.`paymentMethod` AS `paymentMethod`,
        `s-commodity-online-payment`.`paymentNumber` AS `paymentNumber`
   FROM `s-commodity-online-order`
@@ -2381,15 +2444,15 @@ DROP STREAM IF EXISTS `s-commodity-join-order-payment-two`;
 CREATE STREAM `s-commodity-join-order-payment-two`
 AS
 SELECT `s-commodity-online-order`.`onlineOrderNumber` AS `onlineOrderNumber`,
-       PARSE_TIMESTAMP(`s-commodity-online-order`.`orderDateTime`, 'yyyy-MM-dd''T''HH:mm:ss') AS `orderDateTime`,
+       PARSE_TIMESTAMP(`s-commodity-online-order`.`orderDateTime`, 'yyyy-MM-dd''T''HH:mm:ss.SSSZ') AS `orderDateTime`,
        `s-commodity-online-order`.`totalAmount` AS `totalAmount`,
        `s-commodity-online-order`.`username` AS `username`,
-       PARSE_TIMESTAMP(`s-commodity-online-payment`.`paymentDateTime`, 'yyyy-MM-dd''T''HH:mm:ss') AS `paymentDateTime`,
+       PARSE_TIMESTAMP(`s-commodity-online-payment`.`paymentDateTime`, 'yyyy-MM-dd''T''HH:mm:ss.SSSZ') AS `paymentDateTime`,
        `s-commodity-online-payment`.`paymentMethod` AS `paymentMethod`,
        `s-commodity-online-payment`.`paymentNumber` AS `paymentNumber`
   FROM `s-commodity-online-order`
     LEFT JOIN `s-commodity-online-payment`
-      WITHIN 1 HOUR
+      WITHIN 1 HOUR GRACE PERIOD 0 MILLISECOND
       ON `s-commodity-online-order`.`onlineOrderNumber` = `s-commodity-online-payment`.`onlineOrderNumber`
 EMIT CHANGES;
 
@@ -2419,10 +2482,10 @@ CREATE STREAM `s-commodity-join-order-payment-three`
 AS
 SELECT ROWKEY as `syntheticKey`,
        `s-commodity-online-order`.`onlineOrderNumber` AS `onlineOrderNumber`,
-       PARSE_TIMESTAMP(`s-commodity-online-order`.`orderDateTime`, 'yyyy-MM-dd''T''HH:mm:ss') AS `orderDateTime`,
+       PARSE_TIMESTAMP(`s-commodity-online-order`.`orderDateTime`, 'yyyy-MM-dd''T''HH:mm:ss.SSSZ') AS `orderDateTime`,
        `s-commodity-online-order`.`totalAmount` AS `totalAmount`,
        `s-commodity-online-order`.`username` AS `username`,
-       PARSE_TIMESTAMP(`s-commodity-online-payment`.`paymentDateTime`, 'yyyy-MM-dd''T''HH:mm:ss') AS `paymentDateTime`,
+       PARSE_TIMESTAMP(`s-commodity-online-payment`.`paymentDateTime`, 'yyyy-MM-dd''T''HH:mm:ss.SSSZ') AS `paymentDateTime`,
        `s-commodity-online-payment`.`paymentMethod` AS `paymentMethod`,
        `s-commodity-online-payment`.`paymentNumber` AS `paymentNumber`
   FROM `s-commodity-online-order`
@@ -2485,7 +2548,7 @@ CREATE TABLE `tbl-commodity-web-vote-username-color`
 AS 
 SELECT `username`, LATEST_BY_OFFSET(`color`) AS `color`
   FROM `s-commodity-web-vote-color`
-GROUP BY `username`;
+GROUP BY `username` EMIT CHANGES;
 
 
 -- Create table to know latest user vote (layout)
@@ -2493,7 +2556,7 @@ CREATE TABLE `tbl-commodity-web-vote-username-layout`
 AS 
 SELECT `username`, LATEST_BY_OFFSET(`layout`) AS `layout`
   FROM `s-commodity-web-vote-layout`
-GROUP BY `username`;
+GROUP BY `username` EMIT CHANGES;
 
 
 -- table for item and vote count, based on latest user vote (color only)
@@ -2944,7 +3007,7 @@ INSERT INTO `s-commodity-loan-submission` (
     `principalLoanAmount` := 6000,
     `annualInterestRate` := 11.5,
     `loanPeriodMonth` := 24,
-    `loanApprovedDate` := '2022-11-21'
+    `loanApprovedDate` := '2024-11-21'
   )
 );
 
@@ -3006,8 +3069,8 @@ INSERT INTO `s-commodity-loan-payment` (
   `installmentPaidDate`
 ) VALUES (
   'LOAN-111',
-  '2023-04-17',
-  '2023-04-15'
+  '2024-04-17',
+  '2024-04-15'
 );
 
 
@@ -3017,8 +3080,8 @@ INSERT INTO `s-commodity-loan-payment` (
   `installmentPaidDate`
 ) VALUES (
   'LOAN-111',
-  '2023-05-17',
-  '2023-05-05'
+  '2024-05-17',
+  '2024-05-05'
 );
 
 
@@ -3028,8 +3091,8 @@ INSERT INTO `s-commodity-loan-payment` (
   `installmentPaidDate`
 ) VALUES (
   'LOAN-111',
-  '2023-06-17',
-  '2023-06-09'
+  '2024-06-17',
+  '2024-06-09'
 );
 
 
@@ -3039,8 +3102,8 @@ INSERT INTO `s-commodity-loan-payment` (
   `installmentPaidDate`
 ) VALUES (
   'LOAN-111',
-  '2023-07-17',
-  '2023-07-17'
+  '2024-07-17',
+  '2024-07-17'
 );
 
 
@@ -3050,8 +3113,8 @@ INSERT INTO `s-commodity-loan-payment` (
   `installmentPaidDate`
 ) VALUES (
   'LOAN-111',
-  '2023-08-17',
-  '2023-08-15'
+  '2024-08-17',
+  '2024-08-15'
 );
 
 
@@ -3062,8 +3125,8 @@ INSERT INTO `s-commodity-loan-payment` (
   `installmentPaidDate`
 ) VALUES (
   'LOAN-222',
-  '2023-04-14',
-  '2023-04-15'
+  '2024-04-14',
+  '2024-04-15'
 );
 
 
@@ -3073,8 +3136,8 @@ INSERT INTO `s-commodity-loan-payment` (
   `installmentPaidDate`
 ) VALUES (
   'LOAN-222',
-  '2023-05-14',
-  '2023-05-05'
+  '2024-05-14',
+  '2024-05-05'
 );
 
 
@@ -3084,8 +3147,8 @@ INSERT INTO `s-commodity-loan-payment` (
   `installmentPaidDate`
 ) VALUES (
   'LOAN-222',
-  '2023-06-14',
-  '2023-06-19'
+  '2024-06-14',
+  '2024-06-19'
 );
 
 
@@ -3095,8 +3158,8 @@ INSERT INTO `s-commodity-loan-payment` (
   `installmentPaidDate`
 ) VALUES (
   'LOAN-222',
-  '2023-07-14',
-  '2023-07-22'
+  '2024-07-14',
+  '2024-07-22'
 );
 
 
@@ -3106,8 +3169,8 @@ INSERT INTO `s-commodity-loan-payment` (
   `installmentPaidDate`
 ) VALUES (
   'LOAN-222',
-  '2023-08-14',
-  '2023-08-15'
+  '2024-08-14',
+  '2024-08-15'
 );
 
 -- run query
@@ -3145,6 +3208,16 @@ WITH (
   KAFKA_TOPIC = 'sc-avro01',
   VALUE_FORMAT = 'AVRO'
 );
+
+
+-- describe stream
+DESCRIBE `s-avro01`;
+
+
+-- push query
+SELECT *
+  FROM `s-avro01`
+EMIT CHANGES;
 
 
 -- insert some dummy data, will fail
@@ -3258,6 +3331,12 @@ INSERT INTO `s-avro-member` (
   '1922-08-25',
   'blue'
 );
+
+
+-- query stream
+SELECT * 
+  FROM `s-avro-member`
+EMIT CHANGES;
 
 
 -- stream for black membership only
@@ -3430,8 +3509,8 @@ CREATE SINK CONNECTOR `sink-postgresql-dummy-csv`
 WITH (
     'connector.class'='io.confluent.connect.jdbc.JdbcSinkConnector',
     'topics'='t-spooldir-csv-demo',
-    'confluent.topic.bootstrap.servers'='192.168.0.9:9092',
-    'connection.url'='jdbc:postgresql://192.168.0.9:5432/postgres',
+    'confluent.topic.bootstrap.servers'='192.168.0.7:9092',
+    'connection.url'='jdbc:postgresql://192.168.0.7:5432/postgres',
     'connection.user'='postgres',
     'connection.password'='postgres',
     'table.name.format'='kafka_employees',

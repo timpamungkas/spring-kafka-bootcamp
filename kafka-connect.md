@@ -1,7 +1,24 @@
 # Kafka Connect
-
+  * [Docker Compose](#docker-compose)
   * [Kafka Console Scripts](#kafka-console-scripts)
   * [Postgresql Scripts - Change Data Capture](#postgresql-scripts---change-data-capture)
+
+----
+
+## Docker Compose
+
+{::options parse_block_html="true" /}
+
+<details><summary markdown="span">Click to expand!</summary>
+
+```bash
+# Restart Kafka Connect (after installing connector)
+docker-compose -f docker-compose-connect.yml -p connect restart kafka-connect
+```
+</details>
+<br/>
+
+{::options parse_block_html="false" /}
 
 ----
 

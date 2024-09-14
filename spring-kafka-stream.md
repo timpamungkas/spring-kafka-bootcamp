@@ -23,6 +23,51 @@ kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --repl
 kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-commodity-promotion
 kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-commodity-promotion-uppercase
 
+kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-demo-stream-branch-source
+kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-demo-stream-branch-sink-gt-100
+kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-demo-stream-branch-sink-gt-20
+kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-demo-stream-branch-sink-gt-10
+kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-demo-stream-cogroup-source-weather
+kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-demo-stream-cogroup-source-traffic
+kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-demo-stream-cogroup-sink
+kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-demo-stream-filter-source
+kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-demo-stream-filter-sink
+kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-demo-stream-filter-not-source
+kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-demo-stream-filter-not-sink
+kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-demo-stream-flat-map-source
+kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-demo-stream-flat-map-sink
+kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-demo-stream-flat-map-values-source
+kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-demo-stream-flat-map-values-sink
+kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-demo-stream-for-each-source
+kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-demo-stream-group-by-source
+kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-demo-stream-group-by-sink
+kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-demo-stream-group-by-key-source
+kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-demo-stream-group-by-key-sink
+kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-demo-stream-map-source
+kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-demo-stream-map-sink
+kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-demo-stream-map-values-source
+kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-demo-stream-map-values-sink
+kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-demo-stream-merge-source-alphabet
+kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-demo-stream-merge-source-name
+kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-demo-stream-merge-sink
+kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-demo-stream-peek-source
+kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-demo-stream-peek-sink
+kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-demo-stream-repartition-source
+kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-demo-stream-repartition-sink-one
+kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-demo-stream-repartition-sink-two
+kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-demo-stream-select-key-source
+kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-demo-stream-select-key-sink
+kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-demo-stream-split-source
+kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-demo-stream-split-sink-gt-100
+kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-demo-stream-split-sink-gt-20
+kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-demo-stream-split-sink-gt-10
+kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-demo-stream-through-source
+kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-demo-stream-through-sink-one
+kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-demo-stream-through-sink-two
+kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-demo-stream-to-table-source
+kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-demo-stream-to-table-sink
+
+
 kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-commodity-pattern-one
 kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-commodity-reward-one
 kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-commodity-storage-one
@@ -80,9 +125,12 @@ kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --repl
 kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-commodity-feedback-six-bad-count-word
 
 kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-commodity-flashsale-vote
-kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-commodity-flashsale-vote-user-item --config "cleanup.policy=compact" --config "delete.retention.ms=2000"  --config "segment.ms=2000" --config "min.cleanable.dirty.ratio=0.01" --config "min.compaction.lag.ms=2000"
+kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-commodity-flashsale-vote-one-user-item --config "cleanup.policy=compact" --config "delete.retention.ms=2000"  --config "segment.ms=2000" --config "min.cleanable.dirty.ratio=0.01" --config "min.compaction.lag.ms=2000"
+kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-commodity-flashsale-vote-two-user-item --config "cleanup.policy=compact" --config "delete.retention.ms=2000"  --config "segment.ms=2000" --config "min.cleanable.dirty.ratio=0.01" --config "min.compaction.lag.ms=2000"
+kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-commodity-flashsale-vote-three-user-item --config "cleanup.policy=compact" --config "delete.retention.ms=2000"  --config "segment.ms=2000" --config "min.cleanable.dirty.ratio=0.01" --config "min.compaction.lag.ms=2000"
 kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-commodity-flashsale-vote-one-result
 kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-commodity-flashsale-vote-two-result
+kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-commodity-flashsale-vote-three-result
 
 kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-commodity-feedback-rating-one
 kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-commodity-feedback-rating-two
@@ -103,6 +151,7 @@ kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --repl
 kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-commodity-inventory-four
 kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-commodity-inventory-five
 kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-commodity-inventory-six
+kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-commodity-inventory-seven
 
 kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-commodity-online-order
 kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-commodity-online-payment
@@ -112,8 +161,6 @@ kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --repl
 
 kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-commodity-web-vote-color
 kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-commodity-web-vote-layout
-kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-commodity-web-vote-one-username-color --config "cleanup.policy=compact" --config "delete.retention.ms=2000"  --config "segment.ms=2000" --config "min.cleanable.dirty.ratio=0.01" --config "min.compaction.lag.ms=2000"
-kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-commodity-web-vote-one-username-layout --config "cleanup.policy=compact" --config "delete.retention.ms=2000"  --config "segment.ms=2000" --config "min.cleanable.dirty.ratio=0.01" --config "min.compaction.lag.ms=2000"
 kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-commodity-web-vote-one-result
 kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-commodity-web-vote-two-username-color --config "cleanup.policy=compact" --config "delete.retention.ms=2000"  --config "segment.ms=2000" --config "min.cleanable.dirty.ratio=0.01" --config "min.compaction.lag.ms=2000"
 kafka-topics.sh --bootstrap-server localhost:9092 --create --partitions 1 --replication-factor 1 --topic t-commodity-web-vote-two-username-layout --config "cleanup.policy=compact" --config "delete.retention.ms=2000"  --config "segment.ms=2000" --config "min.cleanable.dirty.ratio=0.01" --config "min.compaction.lag.ms=2000"
@@ -193,6 +240,10 @@ kafka-console-consumer.sh --bootstrap-server localhost:9092 --property print.key
 kafka-console-consumer.sh --bootstrap-server localhost:9092 --property print.key=true --topic t-commodity-storage-four
 
 
+# Consumer - CommodityFive Stream
+kafka-console-consumer.sh --bootstrap-server localhost:9092 --property print.key=true --property value.deserializer=org.apache.kafka.common.serialization.LongDeserializer --topic t-commodity-fraud-five
+
+
 # Consumer - CommoditySix Stream
 kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic t-commodity-order
 kafka-console-consumer.sh --bootstrap-server localhost:9092 --property print.key=true --topic t-commodity-pattern-six-plastic
@@ -248,14 +299,20 @@ kafka-console-consumer.sh --bootstrap-server localhost:9092 --property print.key
 
 # Consumer - FlashSaleVoteOne Stream
 kafka-console-consumer.sh --bootstrap-server localhost:9092 --property print.key=true --topic t-commodity-flashsale-vote
-kafka-console-consumer.sh --bootstrap-server localhost:9092 --property print.key=true --topic t-commodity-flashsale-vote-user-item
+kafka-console-consumer.sh --bootstrap-server localhost:9092 --property print.key=true --topic t-commodity-flashsale-vote-one-user-item
 kafka-console-consumer.sh --bootstrap-server localhost:9092 --property print.key=true --property value.deserializer=org.apache.kafka.common.serialization.LongDeserializer --topic t-commodity-flashsale-vote-one-result
 
 
 # Consumer - FlashSaleVoteTwo Stream
 kafka-console-consumer.sh --bootstrap-server localhost:9092 --property print.key=true --topic t-commodity-flashsale-vote
-kafka-console-consumer.sh --bootstrap-server localhost:9092 --property print.key=true --topic t-commodity-flashsale-vote-user-item
+kafka-console-consumer.sh --bootstrap-server localhost:9092 --property print.key=true --topic t-commodity-flashsale-vote-two-user-item
 kafka-console-consumer.sh --bootstrap-server localhost:9092 --property print.key=true --property value.deserializer=org.apache.kafka.common.serialization.LongDeserializer --topic t-commodity-flashsale-vote-two-result
+
+
+# Consumer - FlashSaleVoteThree Stream
+kafka-console-consumer.sh --bootstrap-server localhost:9092 --property print.key=true --topic t-commodity-flashsale-vote
+kafka-console-consumer.sh --bootstrap-server localhost:9092 --property print.key=true --topic t-commodity-flashsale-vote-three-user-item
+kafka-console-consumer.sh --bootstrap-server localhost:9092 --property print.key=true --property value.deserializer=org.apache.kafka.common.serialization.LongDeserializer --topic t-commodity-flashsale-vote-three-result
 
 
 # Consumer - FeedbackRatingOne Stream
@@ -283,11 +340,15 @@ kafka-console-consumer.sh --bootstrap-server localhost:9092 --property print.key
 
 
 # Consumer - InventoryFive Stream
-# No console consumer, using print
+# Using code terminal, not kafka-console-consumer
 
 
 # Consumer - InventorySix Stream
-# No console consumer, using print
+# Using code terminal, not kafka-console-consumer
+
+
+# Consumer - InventorySevenStream
+# Using code terminal, not kafka-console-consumer
 
 
 # Consumer - OnlineOrderPaymentOne Stream
@@ -316,10 +377,6 @@ kafka-console-consumer.sh --bootstrap-server localhost:9092 --property print.key
 kafka-console-consumer.sh --bootstrap-server localhost:9092 --property print.key=true --property print.timestamp=true --topic t-commodity-web-vote-three-result
 
 
-#Consumer - WebVoteFour Stream
-kafka-console-consumer.sh --bootstrap-server localhost:9092 --property print.key=true --property print.timestamp=true --topic t-commodity-web-vote-four-result
-
-
 #Consumer - PremiumOfferOne Stream
 kafka-console-consumer.sh --bootstrap-server localhost:9092 --property print.key=true --topic t-commodity-premium-offer-one
 
@@ -334,7 +391,7 @@ kafka-console-consumer.sh --bootstrap-server localhost:9092 --property print.key
 
 
 #Consumer - SubscriptionOfferOne Stream
-# None
+kafka-console-consumer.sh --bootstrap-server localhost:9092 --property print.key=true --topic t-commodity-subscription-offer-one
 
 
 #Consumer - SubscriptionOfferTwo Stream
